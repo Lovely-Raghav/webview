@@ -1,0 +1,66 @@
+package com.lovely.practice;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+public class MainActivity extends AppCompatActivity {
+    private WebView web_view;
+    ProgressDialog progressDialog;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        web_view=findViewById(R.id.web_view);
+        WebSettings webSettings=web_view.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("loading please wait..");
+        progressDialog.show();
+
+        web_view.loadUrl("https://developer.android.com/");
+        web_view.setWebViewClient(new MyWebView());
+    }
+class MyWebView extends WebViewClient{
+        @Override
+    public boolean shouldOverrideUrlLoading(WebView view,String url){
+          return   super.shouldOverrideUrlLoading(view, url);
+        }
+
+    @Override
+    public void onPageFinished(WebView view, String url) {
+            progressDialog.dismiss();
+        super.onPageFinished(view, url);
+    }
+}
+}
+
+// xml file code
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+   <WebView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/web_view"/>
+
+</RelativeLayout>
+// menifest changes
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.lovely.practice">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
