@@ -1,0 +1,548 @@
+Ragistration form 
+//MainActivity.java
+package com.lovely.registerationform;
+
+
+        import androidx.appcompat.app.AppCompatActivity;
+
+        import android.app.DatePickerDialog;
+        import android.content.Intent;
+        import android.graphics.Color;
+        import android.graphics.drawable.ColorDrawable;
+        import android.os.Bundle;
+        import android.os.Parcelable;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.CheckBox;
+        import android.widget.CompoundButton;
+        import android.widget.DatePicker;
+        import android.widget.LinearLayout;
+        import android.widget.RadioButton;
+        import android.widget.RadioGroup;
+        import android.widget.TextView;
+
+        import com.google.android.material.textfield.TextInputEditText;
+        import com.google.android.material.textfield.TextInputLayout;
+
+        import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
+    private TextInputEditText et_fname,lname,num,email;
+    CheckBox coding,playing,listening,reading;
+    RadioGroup radio;
+    Button button;
+    TextInputEditText dob;
+    TextInputLayout tv_dob;
+    DatePickerDialog.OnDateSetListener setListener;
+    RadioButton lovely;
+    boolean isAllFeildsCheckd=false;
+
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        et_fname=(TextInputEditText) findViewById((R.id.et_fname));
+        tv_dob=(TextInputLayout)findViewById(R.id.tv_dob);
+        lname=(TextInputEditText) findViewById((R.id.lname));
+        num=(TextInputEditText) findViewById((R.id.num));
+        email=(TextInputEditText) findViewById((R.id.email));
+        dob=(TextInputEditText) findViewById((R.id.dob));
+        radio=(RadioGroup) findViewById(R.id.radio);
+        coding=(CheckBox) findViewById(R.id.coding);
+        playing=(CheckBox) findViewById(R.id.playing);
+        listening=(CheckBox) findViewById(R.id.listening);
+        reading=(CheckBox) findViewById(R.id.reading);
+        button=(Button) findViewById(R.id.button);
+        button.setOnClickListener(this);
+        radio.setOnCheckedChangeListener(this);
+        Calendar calendar=Calendar.getInstance();
+        final int year=calendar.get(Calendar.YEAR);
+        final int month=calendar.get(Calendar.MONTH);
+        final int day=calendar.get(Calendar.DAY_OF_MONTH);
+        dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog=new DatePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth,setListener
+                ,year,month,day);
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            datePickerDialog.show();
+
+            }
+
+        });
+        setListener=new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int day, int month, int year) {
+                month=month+1;
+                String date=day+"/"+month+"/"+year;
+                dob.setText(date);
+                datePicker.isShown();
+
+            }
+
+        };
+
+
+
+    }
+    private boolean CheckAllFeilds() {
+        if (et_fname.length() == 0) {
+            et_fname.setError("please enter height");
+            return false;
+        }
+        if (lname.length() == 0) {
+            lname.setError("please enter lname");
+            return false;
+        } if (num.length() == 0) {
+            num.setError("please enter number");
+            return false;}
+        if (email.length() == 0) {
+            email.setError("please enter email");
+
+            return false;
+        } if (lovely.length() == 0) {
+            lovely.setError("choose gender");
+            return false;
+        }if(reading.isChecked()||coding.isChecked()||listening.isChecked()||playing.isChecked()){
+
+        }
+        return true;
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        String a = " ";
+        if (view.getId() == R.id.button) {
+            String name = et_fname.getText().toString();
+            String surname = lname.getText().toString();
+            String c = name + " " + surname;
+
+            String contact = num.getText().toString();
+           String dob1=dob.getText().toString();
+           String dob3=dob1;
+            String mail = email.getText().toString();
+            String g = lovely.getText().toString();
+
+            if (coding.isChecked()) {
+                a += coding.getText().toString();
+            }
+            if (playing.isChecked()) {
+                a += playing.getText().toString();
+            }
+            if (reading.isChecked()) {
+                a += reading.getText().toString();
+            }
+            if (listening.isChecked()) {
+                a += listening.getText().toString();
+            }
+            isAllFeildsCheckd = CheckAllFeilds();
+            if (isAllFeildsCheckd) {
+
+                Intent i = new Intent(MainActivity.this, Activity2.class);
+                i.putExtra("UserName", c);
+                i.putExtra("UserMobile", contact);
+                i.putExtra("UserEmail", mail);
+                i.putExtra("UserDob", dob3);
+                i.putExtra("UserHobbies", a);
+                i.putExtra("UserGender", g);
+                startActivity(i);
+            }
+        }
+    }
+
+
+
+
+       private boolean CheckedAllFields () {
+            if (et_fname.length() == 0) {
+                et_fname.setError("this field is required");
+                return false;
+            }
+            if (lname.length() == 0) {
+                lname.setError("this field is required");
+               return false;
+            }
+            if (email.length() == 0) {
+                email.setError("this field is required");
+                return false;
+            }
+            if (et_fname.length() == 0) {
+                et_fname.setError("this field is required");
+                return false;
+            }
+            if (num.length() == 0) {
+                num.setError("this field is required");
+                return false;
+            }
+            if (lovely.length() == 0) {
+                lovely.setError("this field is required");
+                return false;
+            }
+            return true;
+        }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        int id=radioGroup.getCheckedRadioButtonId();
+        RadioButton radioButton=(RadioButton) findViewById(id);
+        lovely=findViewById(id);
+
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+    }
+}
+//ActivityMain.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GOOGLE FORM"
+        android:textStyle="bold"
+        android:layout_gravity="center"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_fname"
+        style="@style/Platform.MaterialComponents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint=" Enter theFirst Name"
+        android:textAlignment="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_fname"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:inputType="textCapSentences"
+            >
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Platform.MaterialComponents"
+        android:id="@+id/til_lname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Enter last name"
+
+        android:layout_margin="5dp"
+        android:textAlignment="center"
+
+        >
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lname"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:inputType="textCapSentences">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="enter number"
+        style="@style/Platform.MaterialComponents"
+        android:layout_margin="5dp"
+        android:textAlignment="center"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/num"
+            android:inputType="phone"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="enter email"
+        style="@style/Platform.MaterialComponents"
+        android:layout_margin="5dp"
+        android:textAlignment="center"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/email"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:inputType="textEmailAddress">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select DOB"
+        android:id="@+id/tv_dob"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dob"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="SELECT YOUR GENDER"
+            />
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radio"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="female"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/female"
+
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="male"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/male"
+
+                />  <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="transgender"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/transgender"
+
+            />
+        </RadioGroup>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="select Hobbies"
+        android:textStyle="bold"
+
+        />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playing"
+        android:text="Playing Cricket"
+        >
+
+    </CheckBox>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reading"
+        android:text="reading books"
+        >
+
+    </CheckBox>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/coding"
+        android:text="Coding"
+        >
+
+    </CheckBox>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listening"
+        android:text="Listening Music"
+        >
+
+    </CheckBox>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:id="@+id/button"
+        android:layout_gravity="center"
+
+        android:layout_marginBottom="30dp"
+        />
+
+
+</LinearLayout>
+//Activity2.java
+package com.lovely.registerationform;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+
+public class Activity2 extends AppCompatActivity {
+
+    private TextView f1,n1,e1,h1,g1,dob2;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_2);
+        f1=findViewById(R.id.f1);
+        n1=findViewById(R.id.n1);
+        e1=findViewById(R.id.e1);
+        h1=findViewById(R.id.h1);
+        dob2=findViewById(R.id.dob2);
+        g1=findViewById(R.id.g1);
+        String UserName=getIntent().getStringExtra("UserName");
+        String UserMobile=getIntent().getStringExtra("UserMobile");
+        String UserEmail=getIntent().getStringExtra("UserEmail");
+        String UserHobbies=getIntent().getStringExtra("UserHobbies");
+        String UserGender=getIntent().getStringExtra("UserGender");
+        String UserDob=getIntent().getStringExtra("UserDob");
+
+     f1.setText("Name -"+UserName);
+     n1.setText("Mobile number -"+UserMobile);
+     e1.setText("Email Address -"+UserEmail);
+     g1.setText("Gender -"+UserGender);
+     h1.setText("Hobbies -"+UserHobbies);
+     dob2.setText("Date of birth -"+UserDob);
+    }
+}
+//Activity2.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity2">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="your data is"
+        android:id="@+id/d1"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textSize="30dp"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name-"
+        android:id="@+id/f1"
+        android:layout_below="@+id/d1"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="number-"
+        android:id="@+id/n1"
+        android:layout_below="@+id/f1"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="email address "
+        android:id="@+id/e1"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"
+        android:layout_below="@+id/n1"
+
+        />
+    />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="selected gender- "
+        android:id="@+id/g1"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"
+        android:layout_below="@+id/e1"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selected Hobbies- "
+        android:id="@+id/h1"
+
+
+        android:textSize="20dp"
+        android:layout_below="@+id/g1"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DOB _  "
+        android:id="@+id/dob2"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"
+        android:layout_below="@+id/h1"
+
+        />
+
+
+
+</RelativeLayout>
